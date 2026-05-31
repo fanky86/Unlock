@@ -1,0 +1,18 @@
+{
+  "name": "vercel-unlocker-manual",
+  "version": "1.0.0",
+  "description": "Unlock link shortener with manual captcha & password input",
+  "main": "api/unlock.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "puppeteer-core": "^21.11.0",
+    "@sparticuz/chromium": "^121.2.0",
+    "axios": "^1.6.5",
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
