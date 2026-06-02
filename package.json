@@ -1,14 +1,15 @@
 {
-  "name": "vercel-unlocker-manual",
+  "name": "unlock-app",
   "version": "1.0.0",
-  "description": "Unlock link shortener with manual captcha & password input",
-  "main": "api/unlock.js",
+  "description": "Link Unlocker with manual captcha & password input - Docker ready",
+  "main": "server.js",
   "scripts": {
-    "dev": "vercel dev"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "puppeteer-core": "^21.11.0",
-    "@sparticuz/chromium": "^121.2.0",
     "axios": "^1.6.5",
     "cheerio": "^1.0.0-rc.12"
   },
