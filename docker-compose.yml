@@ -5,7 +5,7 @@ services:
     build: .
     container_name: unlock-app
     ports:
-      - "3000:3000"   # Ganti port kiri jika perlu (misal 8080:3000)
+      - "3000:3000"
     environment:
       - NODE_ENV=production
     restart: unless-stopped
