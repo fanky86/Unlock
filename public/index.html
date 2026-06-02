@@ -2,175 +2,297 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link Unlocker • Manual Captcha & Password</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Link Unlocker Pro • Bypass Shortener Otomatis</title>
+    <!-- Tailwind + Font Awesome + Google Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap');
-        * { font-family: 'Inter', sans-serif; }
-        body { background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%); min-height: 100vh; }
-        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .gradient-border { background: linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6); padding: 1px; border-radius: 1rem; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
-        .animate-scan { animation: scan 2s linear infinite; }
-        @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap');
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: radial-gradient(circle at 10% 20%, rgba(2, 10, 30, 1) 0%, rgba(5, 20, 40, 1) 100%);
+            min-height: 100vh;
+        }
+        /* Glassmorphism card */
+        .glass {
+            background: rgba(15, 25, 45, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        .glass-card {
+            background: rgba(10, 20, 35, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.2s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 8px 20px rgba(0,150,255,0.1);
+        }
+        /* Gradient border magic */
+        .gradient-border {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6, #a855f7);
+            padding: 1.5px;
+            border-radius: 1.8rem;
+        }
+        /* Input field styling */
+        .input-modern {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.2s;
+        }
+        .input-modern:focus {
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6,182,212,0.2);
+            outline: none;
+        }
+        /* Button glow */
+        .btn-primary {
+            background: linear-gradient(105deg, #0ea5e9, #3b82f6);
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(14,165,233,0.4);
+        }
+        /* Scrollbar custom */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2dd4bf;
+            border-radius: 10px;
+        }
+        /* Animasi scan line */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #0ea5e9, #a855f7, transparent);
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        /* Loading spinner */
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(14,165,233,0.2);
+            border-top: 4px solid #0ea5e9;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        /* Video player container */
+        .video-wrapper {
+            background: #000000aa;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        /* Tombol kecil modern */
+        .badge-captcha {
+            background: rgba(239,68,68,0.2);
+            border-left: 3px solid #ef4444;
+        }
+        .badge-password {
+            background: rgba(245,158,11,0.2);
+            border-left: 3px solid #f59e0b;
+        }
     </style>
 </head>
 <body class="text-white">
-    <div class="container mx-auto px-4 py-8 max-w-6xl">
-        <!-- Header -->
-        <div class="text-center mb-10">
-            <div class="inline-block p-4 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 mb-4">
-                <i class="fas fa-unlock-alt text-5xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"></i>
+
+    <!-- Toast container -->
+    <div id="toastContainer" class="toast hidden"></div>
+
+    <div class="container mx-auto px-4 py-6 max-w-6xl">
+        <!-- Header dengan logo modern -->
+        <div class="text-center mb-10 relative">
+            <div class="inline-block p-3 rounded-full bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 backdrop-blur-sm border border-white/10 mb-4">
+                <i class="fas fa-unlock-alt text-5xl bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"></i>
             </div>
-            <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
-                Link Unlocker
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500">Link Unlocker</span>
+                <span class="text-xs align-top ml-2 bg-cyan-500/30 text-cyan-200 px-2 py-1 rounded-full">PRO</span>
             </h1>
-            <p class="text-gray-300 mt-3 text-lg">Scan & unlock link shortener • Support password & captcha manual</p>
+            <p class="text-gray-300 mt-3 max-w-xl mx-auto">Bypass semua shortener • Auto captcha math & klik • Dapatkan link utama & video MP4</p>
         </div>
 
-        <!-- Input Section -->
+        <!-- Input Section - Glassmorphic -->
         <div class="gradient-border mb-8">
-            <div class="glass-card rounded-xl p-6">
-                <label class="block text-sm font-semibold mb-2 text-cyan-300">
-                    <i class="fas fa-link mr-2"></i>Masukkan Link
+            <div class="glass p-6 md:p-8">
+                <label class="block text-sm font-semibold mb-2 text-cyan-300 tracking-wide">
+                    <i class="fas fa-link mr-2"></i>Masukkan URL Shortener
                 </label>
-                <div class="flex gap-3 flex-wrap">
-                    <input type="text" id="inputUrl" class="flex-1 px-5 py-3 bg-black/30 rounded-xl border border-gray-600 focus:border-cyan-400 focus:outline-none transition" 
-                           placeholder="https://sub2unlock.com/xxx atau https://pastelink.net/xxx">
-                    <button id="unlockBtn" class="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 rounded-xl font-bold transition flex items-center gap-2">
-                        <i class="fas fa-play"></i> Scan
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" id="inputUrl" class="input-modern flex-1 px-5 py-4 rounded-xl text-white placeholder:text-gray-400 text-base" 
+                           placeholder="https://sub2unlock.com/... / https://exe.io/... / https://shortlink.com/...">
+                    <button id="unlockBtn" class="btn-primary px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 shadow-lg transition-all">
+                        <i class="fas fa-bolt"></i> Buka & Scan
                     </button>
                 </div>
                 
-                <!-- Password Input (muncul jika perlu) -->
-                <div id="passwordSection" class="mt-4 hidden">
-                    <label class="block text-sm font-semibold mb-2 text-yellow-300">
-                        <i class="fas fa-lock mr-2"></i>Link Terproteksi Password
-                    </label>
-                    <div class="flex gap-3">
-                        <input type="password" id="passwordInput" class="flex-1 px-5 py-3 bg-black/30 rounded-xl border border-yellow-600 focus:border-yellow-400 focus:outline-none" 
-                               placeholder="Masukkan password">
-                        <button id="submitPasswordBtn" class="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-xl font-bold transition">
-                            <i class="fas fa-key"></i> Unlock
-                        </button>
+                <!-- Password Input (dinamis) -->
+                <div id="passwordSection" class="mt-5 hidden">
+                    <div class="bg-yellow-900/30 border border-yellow-500/40 rounded-xl p-4">
+                        <label class="block text-sm font-semibold mb-2 text-yellow-300">
+                            <i class="fas fa-lock mr-2"></i>Link Terproteksi Password
+                        </label>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="password" id="passwordInput" class="input-modern flex-1 px-4 py-3 rounded-lg" placeholder="Masukkan password">
+                            <button id="submitPasswordBtn" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-3 rounded-lg font-semibold transition"><i class="fas fa-key mr-1"></i> Unlock</button>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Captcha Info -->
-                <div id="captchaInfo" class="mt-4 p-3 bg-red-900/30 border border-red-500/50 rounded-xl hidden">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-shield-alt text-red-400 text-xl"></i>
+                <!-- Captcha Info / Manual solve -->
+                <div id="captchaInfo" class="mt-5 hidden">
+                    <div class="bg-red-900/40 border border-red-500/50 rounded-xl p-4 flex items-start gap-3">
+                        <i class="fas fa-shield-haltered text-red-400 text-2xl"></i>
                         <div class="flex-1">
-                            <p class="font-semibold text-red-300">Captcha Terdeteksi!</p>
-                            <p class="text-sm text-gray-300">Link ini membutuhkan verifikasi captcha. Silakan buka link di browser terpisah, selesaikan captcha, lalu scan ulang.</p>
+                            <p class="font-bold text-red-300">Captcha Terdeteksi!</p>
+                            <p class="text-sm text-gray-200">Buka link ini di browser terpisah, selesaikan captcha, lalu centang kotak di bawah dan scan ulang.</p>
+                            <label class="inline-flex items-center gap-2 mt-2 cursor-pointer">
+                                <input type="checkbox" id="manualCaptchaCheck" class="w-4 h-4 rounded border-gray-500 bg-transparent">
+                                <span class="text-sm">Saya sudah menyelesaikan captcha secara manual</span>
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Loading -->
-        <div id="loading" class="glass-card rounded-xl p-8 text-center hidden">
+        <!-- Loading state elegant -->
+        <div id="loading" class="glass-card rounded-2xl p-10 text-center hidden">
             <div class="relative overflow-hidden">
-                <i class="fas fa-spinner fa-spin text-4xl text-cyan-400 mb-4"></i>
-                <p class="text-lg">Memindai link & mengekstrak konten...</p>
-                <p class="text-sm text-gray-400 mt-2">Jika ada captcha, proses akan membutuhkan input manual</p>
-                <div class="absolute inset-0 animate-scan h-full w-full bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"></div>
+                <div class="spinner mx-auto mb-5"></div>
+                <h3 class="text-xl font-semibold">Memindai link & mengekstrak konten...</h3>
+                <p class="text-gray-400 mt-2">Proses ini mungkin memakan waktu 15-30 detik</p>
+                <div class="scan-line"></div>
             </div>
         </div>
 
-        <!-- Results -->
+        <!-- Results Dashboard -->
         <div id="results" class="space-y-6 hidden">
-            <!-- Summary Stats -->
-            <div class="glass-card rounded-xl p-6">
-                <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fas fa-chart-line text-cyan-400"></i> Hasil Scan</h2>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                    <div class="bg-black/30 p-3 rounded-lg"><i class="fas fa-code-branch text-blue-400"></i><p id="redirectCount" class="text-2xl font-bold">0</p><p class="text-xs">Redirect</p></div>
-                    <div class="bg-black/30 p-3 rounded-lg"><i class="fas fa-link text-purple-400"></i><p id="urlCount" class="text-2xl font-bold">0</p><p class="text-xs">URL Ditemukan</p></div>
-                    <div class="bg-black/30 p-3 rounded-lg"><i class="fas fa-video text-red-400"></i><p id="mp4Count" class="text-2xl font-bold">0</p><p class="text-xs">Video MP4</p></div>
-                    <div class="bg-black/30 p-3 rounded-lg"><i class="fas fa-shield-alt text-yellow-400"></i><p id="captchaStatus" class="text-sm font-semibold">-</p><p class="text-xs">Captcha</p></div>
-                    <div class="bg-black/30 p-3 rounded-lg"><i class="fas fa-lock text-orange-400"></i><p id="passwordStatus" class="text-sm font-semibold">-</p><p class="text-xs">Password</p></div>
-                </div>
+            <!-- Statistik Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="glass-card p-4 text-center"><i class="fas fa-code-branch text-cyan-400 text-xl mb-1 block"></i><p id="redirectCount" class="text-2xl font-bold">0</p><p class="text-xs text-gray-400">Redirect</p></div>
+                <div class="glass-card p-4 text-center"><i class="fas fa-link text-purple-400 text-xl mb-1 block"></i><p id="urlCount" class="text-2xl font-bold">0</p><p class="text-xs text-gray-400">URL Ditemukan</p></div>
+                <div class="glass-card p-4 text-center"><i class="fas fa-video text-red-400 text-xl mb-1 block"></i><p id="mp4Count" class="text-2xl font-bold">0</p><p class="text-xs text-gray-400">Video MP4</p></div>
+                <div class="glass-card p-4 text-center"><i class="fas fa-shield-alt text-yellow-400 text-xl mb-1 block"></i><p id="captchaStatus" class="text-sm font-semibold">-</p><p class="text-xs">Captcha</p></div>
+                <div class="glass-card p-4 text-center"><i class="fas fa-lock text-orange-400 text-xl mb-1 block"></i><p id="passwordStatus" class="text-sm font-semibold">-</p><p class="text-xs">Password</p></div>
             </div>
 
-            <!-- Notification Message -->
+            <!-- Notifikasi -->
             <div id="notificationBox" class="rounded-xl p-4 hidden"></div>
 
-            <!-- Main Link -->
-            <div class="glass-card rounded-xl p-6">
-                <h2 class="text-lg font-bold mb-3"><i class="fas fa-crown text-yellow-400"></i> Link Utama</h2>
-                <div class="bg-black/50 p-4 rounded-lg break-all font-mono text-sm" id="mainLink"></div>
-                <div class="flex gap-3 mt-3">
-                    <button id="copyMainBtn" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition"><i class="fas fa-copy"></i> Salin Link</button>
-                    <button id="openMainBtn" class="px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-lg text-sm transition"><i class="fas fa-external-link-alt"></i> Buka di Tab Baru</button>
+            <!-- Main Link Utama dengan aksi -->
+            <div class="glass-card p-6">
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-crown text-yellow-400"></i> Link Utama</h2>
+                <div class="bg-black/40 p-4 rounded-xl break-all font-mono text-sm border border-white/10" id="mainLink"></div>
+                <div class="flex flex-wrap gap-3 mt-4">
+                    <button id="copyMainBtn" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-sm transition flex items-center gap-2"><i class="fas fa-copy"></i> Salin Link</button>
+                    <button id="openMainBtn" class="px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-xl text-sm transition flex items-center gap-2"><i class="fas fa-external-link-alt"></i> Buka Tab Baru</button>
                 </div>
             </div>
 
             <!-- Video Player -->
-            <div id="videoSection" class="glass-card rounded-xl p-6 hidden">
-                <h2 class="text-lg font-bold mb-3"><i class="fas fa-play-circle text-green-400"></i> Video Player</h2>
-                <video id="videoPlayer" class="w-full rounded-xl" controls></video>
-                <div class="mt-3 flex gap-2 overflow-x-auto pb-2" id="videoList"></div>
+            <div id="videoSection" class="glass-card p-6 hidden">
+                <h2 class="text-xl font-bold mb-3"><i class="fas fa-play-circle text-green-400"></i> Pemutar Video</h2>
+                <div class="video-wrapper rounded-xl">
+                    <video id="videoPlayer" class="w-full rounded-xl" controls></video>
+                </div>
+                <div class="mt-3 flex gap-2 overflow-x-auto pb-2 scrollbar-thin" id="videoList"></div>
             </div>
 
-            <!-- All Discovered URLs -->
-            <div class="glass-card rounded-xl p-6">
-                <h2 class="text-lg font-bold mb-3"><i class="fas fa-list-ul text-cyan-400"></i> Semua URL Ditemukan</h2>
-                <div class="max-h-64 overflow-y-auto space-y-2" id="urlList"></div>
+            <!-- Semua URL ditemukan -->
+            <div class="glass-card p-6">
+                <h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fas fa-list-ul text-cyan-400"></i> Semua URL Ditemukan</h2>
+                <div class="max-h-64 overflow-y-auto space-y-2 text-sm" id="urlList"></div>
             </div>
 
             <!-- Redirect Chain -->
-            <div class="glass-card rounded-xl p-6">
-                <h2 class="text-lg font-bold mb-3"><i class="fas fa-random text-purple-400"></i> Redirect Chain</h2>
-                <div class="max-h-48 overflow-y-auto space-y-2 text-sm font-mono" id="redirectList"></div>
+            <div class="glass-card p-6">
+                <h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fas fa-random text-purple-400"></i> Rantai Redirect</h2>
+                <div class="max-h-48 overflow-y-auto space-y-2 font-mono text-xs" id="redirectList"></div>
             </div>
         </div>
     </div>
 
     <script>
+        // DOM Elements
         const unlockBtn = document.getElementById('unlockBtn');
         const inputUrl = document.getElementById('inputUrl');
-        const loading = document.getElementById('loading');
-        const results = document.getElementById('results');
+        const loadingDiv = document.getElementById('loading');
+        const resultsDiv = document.getElementById('results');
         const passwordSection = document.getElementById('passwordSection');
         const passwordInput = document.getElementById('passwordInput');
         const submitPasswordBtn = document.getElementById('submitPasswordBtn');
-        const captchaInfo = document.getElementById('captchaInfo');
-        
+        const captchaInfoDiv = document.getElementById('captchaInfo');
+        const manualCaptchaCheck = document.getElementById('manualCaptchaCheck');
+
         let currentUrl = '';
         let currentPassword = null;
-        let currentManualCaptcha = false;
         
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toastContainer');
+            const colors = {
+                success: 'bg-emerald-600/90 border-emerald-400',
+                error: 'bg-red-600/90 border-red-400',
+                warning: 'bg-yellow-600/90 border-yellow-400',
+                info: 'bg-blue-600/90 border-blue-400'
+            };
+            toast.className = `toast ${colors[type]} border-l-8 backdrop-blur-lg text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-triangle' : type === 'warning' ? 'fa-exclamation-circle' : 'fa-info-circle'} text-xl"></i> <span>${message}</span>`;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 5000);
+        }
+
         unlockBtn.addEventListener('click', async () => {
             currentUrl = inputUrl.value.trim();
-            if (!currentUrl) return alert('Masukkan URL!');
-            
-            // Reset state
-            passwordSection.classList.add('hidden');
-            captchaInfo.classList.add('hidden');
-            currentPassword = null;
-            currentManualCaptcha = false;
-            
-            await scanUrl();
-        });
-        
-        submitPasswordBtn.addEventListener('click', async () => {
-            currentPassword = passwordInput.value.trim();
-            if (!currentPassword) {
-                alert('Masukkan password terlebih dahulu!');
+            if (!currentUrl) {
+                showToast('Masukkan URL terlebih dahulu', 'warning');
                 return;
             }
-            await scanUrl();
-        });
-        
-        async function scanUrl() {
-            unlockBtn.disabled = true;
-            loading.classList.remove('hidden');
-            results.classList.add('hidden');
+            currentPassword = passwordInput.value.trim() || null;
+            const manualSolved = manualCaptchaCheck.checked;
+            
+            // Reset UI
             passwordSection.classList.add('hidden');
-            captchaInfo.classList.add('hidden');
+            captchaInfoDiv.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+            resultsDiv.classList.add('hidden');
+            unlockBtn.disabled = true;
             
             try {
                 const response = await fetch('/api/unlock', {
@@ -179,52 +301,59 @@
                     body: JSON.stringify({ 
                         url: currentUrl, 
                         password: currentPassword,
-                        manualCaptchaSolved: currentManualCaptcha
+                        manualCaptchaSolved: manualSolved,
+                        useApiSolver: false
                     })
                 });
-                
                 const data = await response.json();
                 displayResults(data);
                 
-                // Handle password requirement
                 if (data.password_required && !currentPassword) {
                     passwordSection.classList.remove('hidden');
-                    captchaInfo.classList.add('hidden');
-                    showNotification('🔐 Link ini membutuhkan password. Masukkan password untuk melanjutkan.', 'warning');
+                    showToast('🔐 Link membutuhkan password. Masukkan password untuk melanjutkan.', 'warning');
                 }
-                
-                // Handle captcha detection
-                if (data.captcha_detected && !currentManualCaptcha) {
-                    captchaInfo.classList.remove('hidden');
-                    showNotification(`⚠️ Captcha terdeteksi (${data.captcha_type || 'unknown'}). Buka link di tab baru, selesaikan captcha, lalu klik "Scan" lagi.`, 'error');
+                if (data.captcha_detected && !manualSolved) {
+                    captchaInfoDiv.classList.remove('hidden');
+                    showToast(`⚠️ Captcha terdeteksi (${data.captcha_type}). Selesaikan manual lalu centang checkbox.`, 'error');
                 }
-                
-                if (data.mp4_links && data.mp4_links.length > 0) {
-                    showNotification(`🎉 Berhasil! Ditemukan ${data.mp4_links.length} video.`, 'success');
+                if (data.success && data.mp4_links?.length) {
+                    showToast(`🎉 Berhasil! ${data.mp4_links.length} video siap diputar.`, 'success');
+                } else if (data.success) {
+                    showToast('✅ Link berhasil diproses. Lihat link utama di bawah.', 'success');
                 }
-                
             } catch (err) {
-                alert('Error: ' + err.message);
+                showToast('Error: ' + err.message, 'error');
             } finally {
+                loadingDiv.classList.add('hidden');
+                resultsDiv.classList.remove('hidden');
                 unlockBtn.disabled = false;
-                loading.classList.add('hidden');
-                results.classList.remove('hidden');
             }
-        }
+        });
         
+        submitPasswordBtn.addEventListener('click', () => {
+            currentPassword = passwordInput.value.trim();
+            if (!currentPassword) {
+                showToast('Masukkan password terlebih dahulu', 'warning');
+                return;
+            }
+            unlockBtn.click();
+        });
+
         function displayResults(data) {
-            // Update stats
+            // Update statistik
             document.getElementById('redirectCount').innerText = data.redirect_chain?.length || 0;
             document.getElementById('urlCount').innerText = data.all_discovered_urls?.length || 0;
             document.getElementById('mp4Count').innerText = data.total_mp4_found || 0;
             document.getElementById('captchaStatus').innerHTML = data.captcha_detected ? 
-                '<span class="text-red-400">✓ Terdeteksi</span>' : '<span class="text-green-400">✗ Tidak ada</span>';
+                '<span class="text-red-400 flex items-center gap-1"><i class="fas fa-exclamation-triangle text-xs"></i> Ya</span>' : 
+                '<span class="text-green-400"><i class="fas fa-check-circle"></i> Tidak</span>';
             document.getElementById('passwordStatus').innerHTML = data.password_required ? 
-                '<span class="text-yellow-400">✓ Perlu Password</span>' : '<span class="text-green-400">✗ Tidak ada</span>';
+                '<span class="text-yellow-400 flex items-center gap-1"><i class="fas fa-lock"></i> Ya</span>' : 
+                '<span class="text-green-400">Tidak</span>';
             
             // Main link
             const mainLinkHtml = data.main_content_link ? 
-                `<a href="${data.main_content_link}" target="_blank" class="text-cyan-300 underline break-all">${data.main_content_link}</a>` : 
+                `<a href="${data.main_content_link}" target="_blank" class="text-cyan-300 underline break-all hover:text-cyan-200">${data.main_content_link}</a>` : 
                 '<span class="text-gray-400">Tidak ditemukan</span>';
             document.getElementById('mainLink').innerHTML = mainLinkHtml;
             
@@ -232,15 +361,14 @@
             const videoSection = document.getElementById('videoSection');
             const videoPlayer = document.getElementById('videoPlayer');
             const videoList = document.getElementById('videoList');
-            
             if (data.mp4_links && data.mp4_links.length > 0) {
                 videoSection.classList.remove('hidden');
                 videoPlayer.src = data.mp4_links[0];
                 videoPlayer.load();
                 videoList.innerHTML = data.mp4_links.map((link, i) => 
                     `<button onclick="document.getElementById('videoPlayer').src='${link}'; document.getElementById('videoPlayer').load();" 
-                        class="px-3 py-1 bg-black/50 hover:bg-cyan-600 rounded-lg text-sm transition whitespace-nowrap">
-                        🎬 Video ${i+1}
+                        class="px-4 py-2 bg-black/50 hover:bg-cyan-600 rounded-xl text-sm transition whitespace-nowrap">
+                        <i class="fas fa-play mr-1"></i> Video ${i+1}
                     </button>`
                 ).join('');
             } else {
@@ -248,56 +376,42 @@
             }
             
             // URL List
-            const urlList = document.getElementById('urlList');
-            urlList.innerHTML = (data.all_discovered_urls || []).slice(0, 30).map(link => 
-                `<div class="bg-black/30 p-2 rounded-lg text-xs break-all">
+            const urlListDiv = document.getElementById('urlList');
+            urlListDiv.innerHTML = (data.all_discovered_urls || []).slice(0, 30).map(link => 
+                `<div class="bg-black/30 p-2 rounded-lg text-xs break-all hover:bg-black/50 transition">
+                    <i class="fas fa-link text-gray-500 mr-1"></i>
                     <a href="${link}" target="_blank" class="text-blue-300 hover:underline">${link}</a>
                  </div>`
             ).join('');
             
             // Redirect chain
-            const redirectList = document.getElementById('redirectList');
+            const redirectDiv = document.getElementById('redirectList');
             if (data.redirect_chain && data.redirect_chain.length > 0) {
-                redirectList.innerHTML = data.redirect_chain.map(r => 
-                    `<div class="bg-black/30 p-2 rounded-lg">
-                        <span class="text-yellow-400">➡️ Redirect:</span> 
-                        <span class="text-gray-400 text-xs break-all">${r.from}</span>
-                        <span class="text-cyan-400"> → </span>
-                        <span class="text-gray-400 text-xs break-all">${r.to}</span>
+                redirectDiv.innerHTML = data.redirect_chain.map(r => 
+                    `<div class="bg-black/30 p-2 rounded-lg flex flex-wrap items-center gap-1 text-xs">
+                        <span class="text-yellow-400">➡️ Redirect:</span>
+                        <span class="text-gray-400 truncate max-w-[200px]">${r.from.split('?')[0]}</span>
+                        <span class="text-cyan-400">→</span>
+                        <span class="text-gray-400 truncate max-w-[200px]">${r.to.split('?')[0]}</span>
                      </div>`
                 ).join('');
             } else {
-                redirectList.innerHTML = '<div class="text-gray-400 text-center py-2">Tidak ada redirect</div>';
+                redirectDiv.innerHTML = '<div class="text-gray-400 text-center py-2">Tidak ada redirect</div>';
             }
         }
         
-        function showNotification(message, type) {
-            const notificationBox = document.getElementById('notificationBox');
-            const colors = {
-                success: 'bg-green-900/50 border-green-500 text-green-200',
-                error: 'bg-red-900/50 border-red-500 text-red-200',
-                warning: 'bg-yellow-900/50 border-yellow-500 text-yellow-200',
-                info: 'bg-blue-900/50 border-blue-500 text-blue-200'
-            };
-            notificationBox.className = `rounded-xl p-4 mb-4 border ${colors[type] || colors.info}`;
-            notificationBox.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-triangle' : type === 'warning' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-2"></i> ${message}`;
-            notificationBox.classList.remove('hidden');
-            setTimeout(() => notificationBox.classList.add('hidden'), 8000);
-        }
-        
+        // Copy & open main link
         document.getElementById('copyMainBtn').addEventListener('click', () => {
             const linkText = document.getElementById('mainLink').innerText;
             if (linkText && linkText !== 'Tidak ditemukan') {
                 navigator.clipboard.writeText(linkText);
-                showNotification('Link disalin ke clipboard!', 'success');
-            }
+                showToast('Link disalin ke clipboard!', 'success');
+            } else showToast('Tidak ada link untuk disalin', 'warning');
         });
-        
         document.getElementById('openMainBtn').addEventListener('click', () => {
             const linkText = document.getElementById('mainLink').innerText;
-            if (linkText && linkText !== 'Tidak ditemukan') {
-                window.open(linkText, '_blank');
-            }
+            if (linkText && linkText !== 'Tidak ditemukan') window.open(linkText, '_blank');
+            else showToast('Link utama tidak tersedia', 'error');
         });
     </script>
 </body>
